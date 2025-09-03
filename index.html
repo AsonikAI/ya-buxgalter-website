@@ -3,639 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asonik AI</title>
+    <title>Ya_Buxgalter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* CSS styles for the website. Using the Inter font. */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        
-        /* General styles */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #000;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Falling stars/asteroids animation */
-        @keyframes fall {
-            from { transform: translateY(-10vh) translateX(0); opacity: 1; }
-            to { transform: translateY(110vh) translateX(50vw); opacity: 0; }
-        }
-
-        .falling-object {
-            position: fixed;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.7), 0 0 10px 5px rgba(255, 255, 255, 0.5);
-            animation: fall linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Website header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background-color: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 15px rgba(0, 191, 255, 0.7), 0 0 25px rgba(0, 191, 255, 0.5);
-            transition: text-shadow 0.3s ease;
-        }
-
-        .logo:hover {
-            text-shadow: 0 0 20px rgba(0, 191, 255, 1), 0 0 30px rgba(0, 191, 255, 0.8);
-        }
-
-        /* Container for authentication buttons */
-        .auth-buttons-container {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .auth-btn, .profile-btn-wrapper, .modal-auth-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .auth-btn:hover, .profile-btn-wrapper:hover, .modal-auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .main-auth-btn {
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-
-        .main-auth-btn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Chat history button */
-        #chat-history-btn {
-            background-color: #333;
-            color: #fff;
-            transition: background-color 0.3s ease;
-        }
-
-        #chat-history-btn:hover {
-            background-color: #555;
-        }
-
-        /* Profile button with dropdown menu */
-        .profile-btn-wrapper {
-            position: relative;
-            background: none;
-            padding: 0;
-            border-radius: 50%;
-        }
-
-        .profile-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #555;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            cursor: pointer;
-            border: 2px solid #00bfff;
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
-        }
-
-        .profile-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-menu {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background-color: #1a1a1a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 15;
-            min-width: 150px;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .profile-menu.show {
-            display: flex;
-        }
-
-        .profile-menu-item {
-            padding: 10px;
-            cursor: pointer;
-            text-align: left;
-            border-radius: 6px;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            color: white;
-            text-decoration: none;
-        }
-
-        .profile-menu-item:hover {
-            background-color: #2c2f33;
-            transform: translateX(5px);
-        }
-        
-        /* Modal windows */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 20;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background-color: #1a1a1a;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            width: 90%;
-            position: relative;
-            animation: scaleIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .modal-content h2 {
-            margin-top: 0;
-            font-size: 1.5rem;
-            color: white;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-
-        /* Profile form styles */
-        #profile-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            text-align: left;
-        }
-        
-        #profile-form label {
-            font-size: 0.9rem;
-            color: #999;
-        }
-
-        #profile-form input[type="text"] {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background-color: #222;
-            color: #fff;
-            outline: none;
-        }
-
-        #profile-form input[type="file"] {
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 10px;
-            background-color: #222;
-            color: #fff;
-        }
-
-        #save-profile-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #save-profile-btn:hover {
-            background-color: #0056b3;
-        }
-        
-        /* Modal close button */
-        .close-modal-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-        }
-        
-        .close-modal-btn:hover {
-            opacity: 1;
-        }
-
-        /* Main chat container */
-        .chat-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-            z-index: 5;
-        }
-        
-        #ai-chat {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            gap: 15px;
-            padding-bottom: 20px;
-            scroll-behavior: smooth;
-        }
-
-        .message {
-            padding: 15px 20px;
-            border-radius: 20px;
-            max-width: 85%;
-            word-wrap: break-word;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        .message-content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .user-message {
-            background-color: #007bff;
-            align-self: flex-end;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ai-message {
-            background-color: #2c2f33;
-            align-self: flex-start;
-            color: #e0e0e0;
-            border-bottom-left-radius: 4px;
-        }
-
-        /* File preview */
-        .file-preview {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .file-preview-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s ease;
-        }
-
-        .file-preview-item:hover {
-            transform: scale(1.05);
-        }
-        
-        .file-preview-item img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid #555;
-        }
-
-        .file-preview-item .file-name {
-            font-size: 0.8rem;
-            text-align: center;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            margin-top: 6px;
-            color: #ccc;
-        }
-
-        /* File removal button */
-        .remove-file-btn {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-        
-        .remove-file-btn:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        /* Input panel */
-        .chat-input-wrapper {
-            position: sticky;
-            bottom: 20px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 15px;
-            border-radius: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            box-sizing: border-box;
-        }
-        
-        .input-group {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            align-items: center;
-        }
-
-        #user-message-input {
-            flex-grow: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            background-color: #1a1a1a;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: box-shadow 0.3s ease;
-        }
-
-        #user-message-input:focus {
-            box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-        }
-
-        /* Input buttons */
-        .input-button {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            padding: 0;
-        }
-
-        #send-message-btn {
-            background-color: #00bfff;
-            color: white;
-        }
-        
-        #send-message-btn:hover {
-            background-color: #0099e6;
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        #send-message-btn svg {
-            fill: white;
-            width: 24px;
-            height: 24px;
-        }
-        
-        #file-upload-btn {
-            background-color: #3e4247;
-            color: #e0e0e0;
-        }
-        
-        #file-upload-btn:hover {
-            background-color: #55585b;
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Styles for dynamic show/hide */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Loading button style */
-        .send-loading {
-            background-color: #777;
-            cursor: not-allowed;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
         }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <!-- Container for falling asteroids -->
-    <div id="falling-objects-container"></div>
+    <div id="app" class="bg-white rounded-lg shadow-xl p-8 max-w-4xl w-full">
 
-    <!-- Header -->
-    <header class="header">
-        <h1 class="logo">Asonik AI</h1>
-        
-        <!-- Auth button container for non-authenticated users -->
-        <div id="auth-container" class="auth-buttons-container">
-            <button id="main-signin-btn" class="auth-btn main-auth-btn">
-                Войти
-            </button>
+        <!-- Основная навигация -->
+        <nav class="flex justify-between items-center mb-10">
+            <h1 class="text-3xl font-bold text-indigo-700">Ya_Buxgalter</h1>
+            <div class="space-x-4">
+                <button id="showCoursesBtn" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-indigo-700 transition duration-300">
+                    Записаться на курс
+                </button>
+                <button id="showLoginBtn" class="bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-full hover:bg-gray-300 transition duration-300">
+                    Вход
+                </button>
+                <button id="logoutBtn" class="bg-red-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 hidden">
+                    Выйти
+                </button>
+            </div>
+        </nav>
+
+        <!-- Раздел для отображения сообщений -->
+        <div id="messageBox" class="hidden fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg"></div>
+
+        <!-- Информация о пользователе -->
+        <div id="userInfo" class="bg-gray-100 p-4 rounded-lg mb-6 hidden">
+            <p><strong>Ваш ID пользователя:</strong> <span id="userIdDisplay"></span></p>
         </div>
 
-        <!-- Profile and history button container for authenticated users -->
-        <div id="profile-container" class="auth-buttons-container hidden">
-            <button id="chat-history-btn" class="auth-btn">История</button>
-            <span id="display-username">Имя пользователя</span>
-            <div class="profile-btn-wrapper">
-                <button class="profile-btn" id="profile-btn">
-                    <img id="profile-pic" src="https://placehold.co/40x40/2c2f33/white?text=A" alt="Profile Picture">
-                </button>
-                <div class="profile-menu" id="profile-menu">
-                    <a href="#" class="profile-menu-item" id="open-profile-modal-btn">Профиль</a>
-                    <a href="#" class="profile-menu-item" id="signout-btn">Выйти</a>
+        <!-- Главный раздел - Добро пожаловать -->
+        <div id="welcomeSection" class="text-center">
+            <h2 class="text-4xl font-extrabold text-gray-800 mb-4">Добро пожаловать в Ya_Buxgalter!</h2>
+            <p class="text-lg text-gray-600 mb-8">Ваш надежный партнер в мире бухгалтерии. Обучайтесь, развивайтесь и достигайте новых высот с нашими курсами.</p>
+            
+        </div>
+
+        <!-- Раздел "Записаться на курс" -->
+        <div id="coursesSection" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Наши курсы</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Карточка курса: Онлайн -->
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+                    <h3 class="text-xl font-bold mb-2">1. Онлайн курс</h3>
+                    <p class="text-gray-600 mb-4">Гибкое обучение в удобном для вас темпе. Доступ к видеоурокам, материалам и тестам 24/7. Идеально подходит для тех, кто ценит свое время и хочет учиться из любой точки мира.</p>
+                    <button class="w-full bg-indigo-500 text-white font-semibold py-2 rounded-full hover:bg-indigo-600 transition duration-300">
+                        Записаться
+                    </button>
+                </div>
+                <!-- Карточка курса: Индивидуальный -->
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+                    <h3 class="text-xl font-bold mb-2">2. Индивидуальный</h3>
+                    <p class="text-gray-600 mb-4">Персональная программа, адаптированная под ваши цели и уровень знаний. Занятия с опытным преподавателем один на один для максимальной эффективности.</p>
+                    <button class="w-full bg-indigo-500 text-white font-semibold py-2 rounded-full hover:bg-indigo-600 transition duration-300">
+                        Записаться
+                    </button>
+                </div>
+                <!-- Карточка курса: Группа -->
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+                    <h3 class="text-xl font-bold mb-2">3. Группа</h3>
+                    <p class="text-gray-600 mb-4">Динамичное обучение в небольшой группе. Обмен опытом, коллективное решение задач и поддержка со стороны единомышленников.</p>
+                    <button class="w-full bg-indigo-500 text-white font-semibold py-2 rounded-full hover:bg-indigo-600 transition duration-300">
+                        Записаться
+                    </button>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Sign-in modal -->
-    <div id="auth-modal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal-btn">&times;</button>
-            <h2>Добро пожаловать</h2>
-            <div class="modal-buttons">
-                <button id="google-modal-btn" class="modal-auth-btn google-btn">
-                    Войти с Google
-                </button>
-                <button id="apple-modal-btn" class="modal-auth-btn apple-btn">
-                    Войти с Apple
-                </button>
-                <button id="gamecenter-modal-btn" class="modal-auth-btn apple-btn">
-                    Войти с Game Center
-                </button>
+        <!-- Раздел "Вход" -->
+        <div id="loginSection" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Вход для студентов</h2>
+            <div class="max-w-md mx-auto bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label for="loginEmail" class="block text-gray-700 font-semibold mb-2">E-mail</label>
+                        <input type="email" id="loginEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Введите ваш e-mail">
+                    </div>
+                    <div class="mb-6">
+                        <label for="loginPassword" class="block text-gray-700 font-semibold mb-2">Пароль</label>
+                        <input type="password" id="loginPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Введите ваш пароль">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-full hover:bg-indigo-700 transition duration-300">
+                        Войти
+                    </button>
+                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Profile modal -->
-    <div id="profile-modal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal-btn">&times;</button>
-            <h2>Профиль</h2>
-            <form id="profile-form">
-                <label for="username-input">Имя пользователя:</label>
-                <input type="text" id="username-input" placeholder="Введите имя">
-                
-                <label for="avatar-input">Аватар:</label>
-                <input type="file" id="avatar-input" accept="image/*">
-
-                <button type="submit" id="save-profile-btn">Сохранить</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Chat history modal -->
-    <div id="chat-history-modal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal-btn">&times;</button>
-            <h2>История чатов</h2>
-            <div id="history-list"></div>
-        </div>
-    </div>
-
-    <!-- Main chat container -->
-    <main class="chat-container">
-        <!-- Chat messages container (hidden until sign-in) -->
-        <div id="ai-chat" class="hidden">
-            <div id="messages-container"></div>
+        <!-- Панель управления (для авторизованных пользователей) -->
+        <div id="dashboardSection" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Ваши уроки</h2>
+            <p class="text-gray-600 text-center mb-6">Здесь вы найдете все видеоуроки и материалы, доступные по вашему курсу.</p>
+            <div id="lessonsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Уроки будут загружаться сюда из Firestore -->
+            </div>
+            <div class="mt-8 text-center">
+                <button id="changePasswordBtn" class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-gray-600 transition duration-300">
+                    Изменить пароль
+                </button>
+            </div>
         </div>
         
-        <!-- Message input panel (hidden until sign-in) -->
-        <div class="chat-input-wrapper hidden" id="chat-input-wrapper">
-            <!-- File preview container -->
-            <div id="file-preview-container" class="file-preview hidden"></div>
-            
-            <div class="input-group">
-                <input type="text" id="user-message-input" placeholder="Задайте вопрос нейросети...">
-                
-                <!-- Hidden file input -->
-                <input type="file" id="file-upload-input" multiple accept="image/*" class="hidden">
-                
-                <!-- File upload button (paperclip) -->
-                <button id="file-upload-btn" class="input-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(-45deg);">
-                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                    </svg>
-                </button>
-                
-                <!-- Send message button -->
-                <button id="send-message-btn" class="input-button">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                    </svg>
-                </button>
+        <!-- Админ панель (только для администратора) -->
+        <div id="adminPanel" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Панель администратора</h2>
+            <div class="max-w-2xl mx-auto bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                <h3 class="text-xl font-bold mb-4">Добавить новый урок</h3>
+                <form id="addLessonForm">
+                    <div class="mb-4">
+                        <label for="lessonTitle" class="block text-gray-700 font-semibold mb-2">Название урока</label>
+                        <input type="text" id="lessonTitle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Название">
+                    </div>
+                    <div class="mb-4">
+                        <label for="lessonVideo" class="block text-gray-700 font-semibold mb-2">URL видео</label>
+                        <input type="text" id="lessonVideo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ссылка на YouTube, Vimeo и т.д.">
+                    </div>
+                    <div class="mb-4">
+                        <label for="lessonDescription" class="block text-gray-700 font-semibold mb-2">Описание</label>
+                        <textarea id="lessonDescription" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Описание урока"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded-full hover:bg-green-700 transition duration-300">
+                        Добавить урок
+                    </button>
+                </form>
+
+                <h3 class="text-xl font-bold mb-4 mt-8">Добавить нового пользователя</h3>
+                <form id="addUserForm">
+                    <div class="mb-4">
+                        <label for="userEmail" class="block text-gray-700 font-semibold mb-2">E-mail пользователя</label>
+                        <input type="email" id="userEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Введите e-mail">
+                    </div>
+                    <div class="mb-4">
+                        <label for="userPassword" class="block text-gray-700 font-semibold mb-2">Пароль</label>
+                        <input type="password" id="userPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Введите пароль">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 rounded-full hover:bg-blue-700 transition duration-300">
+                        Создать пользователя
+                    </button>
+                </form>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4">Список всех уроков</h3>
+                <ul id="lessonList" class="space-y-4">
+                    <!-- Список уроков для редактирования -->
+                </ul>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Website footer -->
-    <footer>
-        <p>&copy; 2024 Asonik AI. Все права защищены.</p>
-    </footer>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    
-    <script>
-        // Your Firebase data
+        // Глобальные переменные из среды Canvas
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = {
             apiKey: "AIzaSyB1FLSf6PBzNzb7_CWYH6Y0_--jhqO9MLQ",
             authDomain: "asonik-ai.firebaseapp.com",
@@ -645,440 +180,302 @@
             appId: "1:875716508614:web:ad264fdd60a20eb7dd90c7",
             measurementId: "G-HT5T20YPVE"
         };
-        
-        // Key for Gemini API (replace with your actual key)
-        const geminiApiKey = "AIzaSyDZeyjSx5sBtECsBiaLsgnhaGjNvEF8ntU";
-        
-        // Key for ImgBB API
-        const imgbbApiKey = "23dbb48c8abe7d7ffa57785cb44b33e5";
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const googleProvider = new firebase.auth.GoogleAuthProvider();
-        
-        // Get DOM elements
-        const authContainer = document.getElementById('auth-container');
-        const profileContainer = document.getElementById('profile-container');
-        const profileBtn = document.getElementById('profile-btn');
-        const profileMenu = document.getElementById('profile-menu');
-        const profilePicElement = document.getElementById('profile-pic');
-        const displayUsername = document.getElementById('display-username');
-        const messagesContainer = document.getElementById('messages-container');
-        const userMessageInput = document.getElementById('user-message-input');
-        const sendMessageBtn = document.getElementById('send-message-btn');
-        const mainSignInBtn = document.getElementById('main-signin-btn');
-        const signOutBtn = document.getElementById('signout-btn');
-        const aiChatContainer = document.getElementById('ai-chat');
-        const chatInputWrapper = document.getElementById('chat-input-wrapper');
-        const authModal = document.getElementById('auth-modal');
-        const profileModal = document.getElementById('profile-modal');
-        const chatHistoryModal = document.getElementById('chat-history-modal');
-        const historyList = document.getElementById('history-list');
-        const googleModalBtn = document.getElementById('google-modal-btn');
-        const openProfileModalBtn = document.getElementById('open-profile-modal-btn');
-        const chatHistoryBtn = document.getElementById('chat-history-btn');
-        const profileForm = document.getElementById('profile-form');
-        const usernameInput = document.getElementById('username-input');
-        const avatarInput = document.getElementById('avatar-input');
-        const fileUploadBtn = document.getElementById('file-upload-btn');
-        const fileUploadInput = document.getElementById('file-upload-input');
-        const filePreviewContainer = document.getElementById('file-preview-container');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Global chat history array
-        let chatHistory = [];
-        // Array for uploaded files
-        let uploadedFiles = [];
-        
-        // Falling asteroids animation
-        function createFallingObjects() {
-            const container = document.getElementById('falling-objects-container');
-            const numberOfObjects = 30; // Increased number of objects for a denser stream
+        let db;
+        let auth;
+        let userId;
 
-            for (let i = 0; i < numberOfObjects; i++) {
-                const fallingObject = document.createElement('div');
-                fallingObject.classList.add('falling-object');
+        // Элементы DOM
+        const welcomeSection = document.getElementById('welcomeSection');
+        const coursesSection = document.getElementById('coursesSection');
+        const loginSection = document.getElementById('loginSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const adminPanel = document.getElementById('adminPanel');
+        const showCoursesBtn = document.getElementById('showCoursesBtn');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginForm = document.getElementById('loginForm');
+        const lessonsContainer = document.getElementById('lessonsContainer');
+        const userIdDisplay = document.getElementById('userIdDisplay');
+        const userInfo = document.getElementById('userInfo');
+        const addLessonForm = document.getElementById('addLessonForm');
+        const lessonList = document.getElementById('lessonList');
+        const messageBox = document.getElementById('messageBox');
+        const addUserForm = document.getElementById('addUserForm');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
 
-                const size = Math.random() * 5 + 2; // Random size from 2px to 7px
-                const duration = Math.random() * 10 + 10; // Random animation duration from 10s to 20s
-                const delay = Math.random() * 10; // Random delay for asynchronicity
-
-                fallingObject.style.width = `${size}px`;
-                fallingObject.style.height = `${size}px`;
-                fallingObject.style.top = `${Math.random() * 100}vh`;
-                fallingObject.style.left = `${Math.random() * 100}vw`;
-                fallingObject.style.animationDuration = `${duration}s`;
-                fallingObject.style.animationDelay = `${delay}s`;
-                fallingObject.style.animationName = 'fall';
-                container.appendChild(fallingObject);
-            }
+        // Функция для отображения сообщения
+        function showMessage(text, isError = false) {
+            messageBox.textContent = text;
+            messageBox.style.backgroundColor = isError ? '#ef4444' : '#22c55e';
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000);
         }
-        createFallingObjects();
 
-        // Load profile data from LocalStorage on page load
-        window.onload = () => {
-            const savedUsername = localStorage.getItem('username');
-            const savedAvatar = localStorage.getItem('avatar');
-            if (savedUsername) {
-                displayUsername.textContent = savedUsername;
-            }
-            if (savedAvatar) {
-                profilePicElement.src = savedAvatar;
+        // Функция для переключения секций
+        function showSection(sectionId) {
+            const sections = [welcomeSection, coursesSection, loginSection, dashboardSection, adminPanel];
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+        }
+
+        // Отображение главной страницы по умолчанию
+        showSection('welcomeSection');
+
+        // Обработчики кнопок
+        showCoursesBtn.addEventListener('click', () => showSection('coursesSection'));
+        showLoginBtn.addEventListener('click', () => showSection('loginSection'));
+
+        // Инициализация Firebase
+        window.onload = async () => {
+            if (Object.keys(firebaseConfig).length > 0) {
+                try {
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                    console.log('Firebase успешно инициализирован.');
+
+                    // Авторизация
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            userIdDisplay.textContent = userId;
+                            userInfo.classList.remove('hidden');
+                            showLoginBtn.classList.add('hidden');
+                            logoutBtn.classList.remove('hidden');
+                            
+                            // Проверка на админа
+                            const adminDocRef = doc(db, `artifacts/${appId}/public/data/admin_users`, user.uid);
+                            const adminDocSnap = await getDoc(adminDocRef);
+
+                            if (adminDocSnap.exists() && adminDocSnap.data().isAdmin) {
+                                showAdminPanel();
+                            } else {
+                                showDashboard();
+                            }
+
+                        } else {
+                            userId = null;
+                            userInfo.classList.add('hidden');
+                            showLoginBtn.classList.remove('hidden');
+                            logoutBtn.classList.add('hidden');
+                            showSection('welcomeSection');
+                            try {
+                                if (initialAuthToken) {
+                                    await signInWithCustomToken(auth, initialAuthToken);
+                                } else {
+                                    await signInAnonymously(auth);
+                                }
+                            } catch (error) {
+                                console.error('Ошибка анонимной авторизации:', error);
+                            }
+                        }
+                    });
+
+                } catch (error) {
+                    console.error('Ошибка инициализации Firebase:', error);
+                }
+            } else {
+                console.warn('Firebase config не найден. Функции базы данных недоступны.');
             }
         };
 
-        // Open and close modals
-        document.querySelectorAll('[data-modal-target]').forEach(button => {
-            button.addEventListener('click', () => {
-                const modalId = button.dataset.modalTarget;
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.classList.add('open');
-                }
-            });
-        });
-
-        document.querySelectorAll('.close-modal-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const modal = button.closest('.modal');
-                if (modal) {
-                    modal.classList.remove('open');
-                }
-            });
-        });
-
-        [authModal, profileModal, chatHistoryModal].forEach(modal => {
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    modal.classList.remove('open');
-                }
-            });
-        });
-        
-        // Open sign-in modal
-        mainSignInBtn.addEventListener('click', () => authModal.classList.add('open'));
-        
-        // Open chat history modal
-        chatHistoryBtn.addEventListener('click', () => {
-            renderChatHistoryList();
-            chatHistoryModal.classList.add('open');
-        });
-
-        // Open profile modal
-        openProfileModalBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            profileMenu.classList.remove('show');
-            profileModal.classList.add('open');
-            const savedUsername = localStorage.getItem('username');
-            if (savedUsername) {
-                usernameInput.value = savedUsername;
-            }
-        });
-
-        // Toggle profile dropdown menu
-        profileBtn.addEventListener('click', (event) => {
-            profileMenu.classList.toggle('show');
-        });
-
-        // Sign-in handlers
-        googleModalBtn.addEventListener('click', () => {
-            auth.signInWithPopup(googleProvider)
-                .then((result) => {
-                    localStorage.setItem('username', result.user.displayName || 'Пользователь');
-                    localStorage.setItem('avatar', result.user.photoURL || 'https://placehold.co/40x40/2c2f33/white?text=U');
-                    authModal.classList.remove('open');
-                })
-                .catch((error) => {
-                    console.error('Sign-in error:', error.message);
-                    addMessageToChat('Sign-in error: please check Firebase settings.', 'ai');
-                });
-        });
-        
-        // Profile save handler with ImgBB upload
-        profileForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const newUsername = usernameInput.value.trim();
-            if (newUsername) {
-                localStorage.setItem('username', newUsername);
-                displayUsername.textContent = newUsername;
-            }
-
-            const file = avatarInput.files[0];
-            if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append("image", file);
-                    
-                    const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    const imgbbResult = await imgbbResponse.json();
-                    if (imgbbResult.success) {
-                        const newAvatarUrl = imgbbResult.data.url;
-                        localStorage.setItem('avatar', newAvatarUrl);
-                        profilePicElement.src = newAvatarUrl;
-                        console.log("Avatar successfully uploaded to ImgBB:", newAvatarUrl);
-                    } else {
-                        throw new Error("Failed to upload image to ImgBB.");
-                    }
-
-                } catch (error) {
-                    console.error('Avatar upload error:', error);
-                    addMessageToChat('Error: Failed to upload avatar. Please try again.', 'ai');
-                }
-            }
-            profileModal.classList.remove('open');
-        });
-
-        // Sign-out handler
-        signOutBtn.addEventListener('click', () => {
-            auth.signOut().then(() => {
-                console.log('User signed out');
-                localStorage.removeItem('username');
-                localStorage.removeItem('avatar');
-                chatHistory = [];
-                messagesContainer.innerHTML = '';
-            }).catch((error) => {
-                console.error('Sign-out error:', error.message);
-            });
-        });
-
-        // Auth state change listener
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                authContainer.classList.add('hidden');
-                profileContainer.classList.remove('hidden');
-                aiChatContainer.classList.remove('hidden');
-                chatInputWrapper.classList.remove('hidden');
-                authModal.classList.remove('open');
-
-                if (user.photoURL) {
-                    profilePicElement.src = user.photoURL;
-                }
-                if (user.displayName) {
-                    displayUsername.textContent = user.displayName;
-                }
-            } else {
-                authContainer.classList.remove('hidden');
-                profileContainer.classList.add('hidden');
-                aiChatContainer.classList.add('hidden');
-                chatInputWrapper.classList.add('hidden');
-            }
-        });
-        
-        // Function to add a message to chat and save to history
-        function addMessageToChat(text, sender, files = []) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            if (sender === 'user') {
-                messageDiv.classList.add('user-message');
-            } else {
-                messageDiv.classList.add('ai-message');
-            }
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.classList.add('message-content');
-            
-            const textP = document.createElement('p');
-            textP.textContent = text;
-            contentDiv.appendChild(textP);
-            
-            if (files.length > 0) {
-                const previewDiv = document.createElement('div');
-                previewDiv.classList.add('file-preview');
-                files.forEach(file => {
-                    const fileItem = document.createElement('div');
-                    fileItem.classList.add('file-preview-item');
-                    
-                    if (file.type.startsWith('image/')) {
-                        const img = document.createElement('img');
-                        img.src = file.url; // Use URL from ImgBB
-                        img.alt = file.name;
-                        fileItem.appendChild(img);
-                    } else {
-                        const iconDiv = document.createElement('div');
-                        iconDiv.classList.add('file-icon');
-                        iconDiv.innerHTML = `<svg viewBox="0 0 20 20" fill="currentColor" width="32" height="32" class="text-gray-600 dark:text-gray-400"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path></svg>`;
-                        fileItem.appendChild(iconDiv);
-                    }
-                    const fileNameSpan = document.createElement('span');
-                    fileNameSpan.classList.add('file-name');
-                    fileNameSpan.textContent = file.name;
-                    fileItem.appendChild(fileNameSpan);
-                    previewDiv.appendChild(fileItem);
-                });
-                contentDiv.appendChild(previewDiv);
-            }
-            
-            messageDiv.appendChild(contentDiv);
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            chatHistory.push({ text, sender, files });
+        // Функции для работы с разделами
+        function showDashboard() {
+            showSection('dashboardSection');
+            loadLessons();
         }
 
-        // Function to render the chat history list
-        function renderChatHistoryList() {
-            historyList.innerHTML = ''; 
-            if (chatHistory.length > 0) {
-                const sessionDiv = document.createElement('div');
-                sessionDiv.classList.add('history-item');
-                sessionDiv.textContent = chatHistory[0].text.substring(0, 30) + '...';
-                sessionDiv.addEventListener('click', () => {
-                    messagesContainer.innerHTML = '';
-                    chatHistory.forEach(msg => addMessageToChat(msg.text, msg.sender, msg.files));
-                    chatHistoryModal.classList.remove('open');
-                });
-                historyList.appendChild(sessionDiv);
-            } else {
-                historyList.textContent = 'History is empty. Start a new chat!';
-            }
-        }
-        
-        // File upload button handler
-        fileUploadBtn.addEventListener('click', () => {
-            fileUploadInput.click();
-        });
-        
-        // File input change handler
-        fileUploadInput.addEventListener('change', (event) => {
-            uploadedFiles = [...uploadedFiles, ...Array.from(event.target.files)];
-            renderFilePreviews();
-        });
-        
-        // Function to render file previews
-        function renderFilePreviews() {
-            filePreviewContainer.innerHTML = '';
-            if (uploadedFiles.length > 0) {
-                filePreviewContainer.classList.remove('hidden');
-                uploadedFiles.forEach((file, index) => {
-                    const fileItem = document.createElement('div');
-                    fileItem.classList.add('file-preview-item');
-                    
-                    if (file.type.startsWith('image/')) {
-                        const img = document.createElement('img');
-                        img.src = URL.createObjectURL(file);
-                        img.alt = file.name;
-                        fileItem.appendChild(img);
-                    } else {
-                        const iconDiv = document.createElement('div');
-                        iconDiv.classList.add('file-icon');
-                        // Using SVG for file icon
-                        iconDiv.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32" style="color: #999;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 4h7v4h4v12H6z"/></svg>`;
-                        fileItem.appendChild(iconDiv);
-                    }
-                    
-                    // Delete button with icon
-                    const removeBtn = document.createElement('button');
-                    removeBtn.classList.add('remove-file-btn');
-                    removeBtn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                        </svg>
-                    `;
-                    removeBtn.addEventListener('click', () => {
-                        uploadedFiles = uploadedFiles.filter((_, i) => i !== index);
-                        renderFilePreviews();
-                    });
-                    
-                    const fileNameSpan = document.createElement('span');
-                    fileNameSpan.classList.add('file-name');
-                    fileNameSpan.textContent = file.name;
-                    
-                    fileItem.appendChild(removeBtn);
-                    fileItem.appendChild(fileNameSpan);
-                    filePreviewContainer.appendChild(fileItem);
-                });
-            } else {
-                filePreviewContainer.classList.add('hidden');
-            }
+        function showAdminPanel() {
+            showSection('adminPanel');
+            loadAdminLessons();
         }
 
-        // Function to send message to Gemini
-        async function sendMessageToGemini(message, files) {
-            sendMessageBtn.disabled = true;
-            sendMessageBtn.classList.add('send-loading');
-            
-            // Convert uploaded files to base64 for Gemini
-            const filePromises = files.map(file => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve({
-                        inlineData: {
-                            data: reader.result.split(',')[1],
-                            mimeType: file.type
-                        }
-                    });
-                    reader.onerror = error => reject(error);
-                    reader.readAsDataURL(file);
-                });
-            });
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showMessage('Вы успешно вышли из системы.');
+            } catch (error) {
+                console.error('Ошибка выхода из системы:', error);
+                showMessage('Ошибка выхода.', true);
+            }
+        });
+
+        // Логика входа
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
             try {
-                const imageParts = await Promise.all(filePromises);
-                const textPart = { text: message };
-                const contents = [{ role: 'user', parts: [textPart, ...imageParts] }];
-
-                // Display the user's message and files in the chat
-                const uploadedFileUrls = files.map(file => ({
-                    name: file.name,
-                    type: file.type,
-                    url: URL.createObjectURL(file)
-                }));
-                addMessageToChat(message, 'user', uploadedFileUrls);
-
-                // Gemini API request
-                const payload = {
-                    contents: contents,
-                };
-
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${geminiApiKey}`;
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates[0] && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts[0]) {
-                    const aiResponseText = result.candidates[0].content.parts[0].text;
-                    addMessageToChat(aiResponseText, 'ai');
-                } else {
-                    throw new Error('Invalid API response structure');
-                }
-
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('Вход выполнен успешно!');
             } catch (error) {
-                console.error("Error from Gemini API:", error);
-                addMessageToChat("Извините, произошла ошибка. Пожалуйста, попробуйте еще раз.", 'ai');
-            } finally {
-                sendMessageBtn.disabled = false;
-                sendMessageBtn.classList.remove('send-loading');
+                console.error('Ошибка входа:', error);
+                showMessage('Ошибка входа. Проверьте почту и пароль.', true);
             }
-        }
+        });
 
-        // Send message handler
-        sendMessageBtn.addEventListener('click', () => {
-            const message = userMessageInput.value.trim();
-            
-            if (message === '' && uploadedFiles.length === 0) {
+        // Смена пароля
+        changePasswordBtn.addEventListener('click', async () => {
+            const newPassword = prompt('Введите новый пароль:');
+            if (newPassword && newPassword.length >= 6) {
+                const user = auth.currentUser;
+                try {
+                    await updatePassword(user, newPassword);
+                    showMessage('Пароль успешно изменен!');
+                } catch (error) {
+                    console.error('Ошибка смены пароля:', error);
+                    showMessage('Ошибка смены пароля. Попробуйте войти заново.', true);
+                }
+            } else if (newPassword) {
+                showMessage('Пароль должен быть не менее 6 символов.', true);
+            }
+        });
+
+        // CRUD операции для админ-панели
+        addLessonForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('lessonTitle').value;
+            const videoUrl = document.getElementById('lessonVideo').value;
+            const description = document.getElementById('lessonDescription').value;
+
+            if (!title || !videoUrl || !description) {
+                showMessage('Пожалуйста, заполните все поля.', true);
+                return;
+            }
+            if (!db) {
+                showMessage('База данных недоступна.', true);
+                return;
+            }
+            try {
+                // Добавление данных в коллекцию
+                await addDoc(collection(db, `artifacts/${appId}/public/data/lessons`), {
+                    title: title,
+                    videoUrl: videoUrl,
+                    description: description,
+                    createdAt: new Date()
+                });
+                showMessage('Урок успешно добавлен!');
+                addLessonForm.reset();
+            } catch (e) {
+                console.error('Ошибка при добавлении документа: ', e);
+                showMessage('Ошибка при добавлении урока.', true);
+            }
+        });
+
+        // Добавление нового пользователя
+        addUserForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+
+            if (!email || !password) {
+                showMessage('Пожалуйста, заполните e-mail и пароль.', true);
                 return;
             }
 
-            sendMessageToGemini(message, uploadedFiles);
-            
-            // Clear input field and files
-            userMessageInput.value = '';
-            uploadedFiles = [];
-            renderFilePreviews();
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                showMessage(`Пользователь ${userCredential.user.email} успешно создан!`, false);
+                addUserForm.reset();
+            } catch (error) {
+                console.error('Ошибка при создании пользователя:', error);
+                showMessage(`Ошибка: ${error.message}`, true);
+            }
         });
-        
-        // Send on Enter key press
-        userMessageInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' && !sendMessageBtn.disabled) {
-                sendMessageBtn.click();
+
+        // Загрузка уроков для студентов
+        function loadLessons() {
+            if (!db) return;
+            const lessonsRef = collection(db, `artifacts/${appId}/public/data/lessons`);
+            onSnapshot(lessonsRef, (snapshot) => {
+                lessonsContainer.innerHTML = ''; // Очищаем контейнер
+                snapshot.forEach(doc => {
+                    const lesson = doc.data();
+                    const lessonElement = `
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
+                            <div class="relative pb-[56.25%] h-0">
+                                <iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.videoUrl.replace('watch?v=', 'embed/')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold mb-2">${lesson.title}</h4>
+                                <p class="text-gray-600">${lesson.description}</p>
+                            </div>
+                        </div>
+                    `;
+                    lessonsContainer.innerHTML += lessonElement;
+                });
+            }, (error) => {
+                console.error("Ошибка при получении уроков: ", error);
+            });
+        }
+
+        // Загрузка уроков для админ-панели
+        function loadAdminLessons() {
+            if (!db) return;
+            const lessonsRef = collection(db, `artifacts/${appId}/public/data/lessons`);
+            onSnapshot(lessonsRef, (snapshot) => {
+                lessonList.innerHTML = ''; // Очищаем список
+                snapshot.forEach(docSnap => {
+                    const lesson = docSnap.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-white p-4 rounded-lg shadow-sm';
+                    li.innerHTML = `
+                        <span class="font-semibold">${lesson.title}</span>
+                        <div class="space-x-2">
+                            <button data-id="${docSnap.id}" class="edit-btn bg-yellow-500 text-white py-1 px-3 rounded-full text-sm hover:bg-yellow-600 transition duration-300">Редактировать</button>
+                            <button data-id="${docSnap.id}" class="delete-btn bg-red-500 text-white py-1 px-3 rounded-full text-sm hover:bg-red-600 transition duration-300">Удалить</button>
+                        </div>
+                    `;
+                    lessonList.appendChild(li);
+                });
+            }, (error) => {
+                console.error("Ошибка при загрузке уроков для админки: ", error);
+            });
+        }
+
+        // Обработчики для админ-панели
+        lessonList.addEventListener('click', async (e) => {
+            const target = e.target;
+            const lessonId = target.getAttribute('data-id');
+
+            if (!db || !lessonId) {
+                showMessage('База данных недоступна.', true);
+                return;
+            }
+            
+            if (target.classList.contains('delete-btn')) {
+                // Удаление урока
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/lessons`, lessonId));
+                    showMessage('Урок успешно удален!');
+                } catch (e) {
+                    console.error("Ошибка при удалении документа: ", e);
+                    showMessage('Ошибка при удалении.', true);
+                }
+            } else if (target.classList.contains('edit-btn')) {
+                // Редактирование урока (простая логика, можно расширить)
+                const newTitle = prompt('Введите новое название урока:');
+                if (newTitle) {
+                    try {
+                        await updateDoc(doc(db, `artifacts/${appId}/public/data/lessons`, lessonId), {
+                            title: newTitle
+                        });
+                        showMessage('Урок успешно обновлен!');
+                    } catch (e) {
+                        console.error("Ошибка при обновлении документа: ", e);
+                        showMessage('Ошибка при обновлении.', true);
+                    }
+                }
             }
         });
     </script>
